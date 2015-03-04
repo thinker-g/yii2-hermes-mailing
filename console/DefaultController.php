@@ -25,19 +25,22 @@ class DefaultController extends Controller
         $installStat = [];
         
         $migration = $this->getMigration();
-        if (false) {
+        if (true) {
             $migration->up();
         }
         
         // Generate AR
         if (true) {
-            
+            $modelGenerator = Yii::createObject('yii\gii\generators\model\Generator');
+            $modelGenerator = new \yii\gii\generators\model\Generator;
+            $modelGenerator->tableName = $migration->tableName;
+            var_dump($modelGenerator->generate());
         }
         
     }
     
     public function actionUninstall() {
-        $this->getMigration(false);
+        $this->getMigration()->down();
     }
     
     /**
