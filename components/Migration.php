@@ -50,6 +50,11 @@ class Migration extends YiiMigration
         return Yii::$app->getDb()->getSchema()
             ->getRawTableName($this->table);
     }
+    
+    public function isTableExists()
+    {
+        return in_array($this->getTableName(), Yii::$app->getDb()->getSchema()->tableNames);
+    }
 
 }
 
