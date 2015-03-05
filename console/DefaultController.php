@@ -18,13 +18,40 @@ class DefaultController extends Controller
 
     public $giiID = 'gii';
     
+    public $mailModel = 'app\models\EmailQueue';
+    
     private $_migration;
-
+    
     public function actionIndex()
     {
 
         $this->run("/help", [$this->id]);
         return 0;
+    }
+    
+    public function actionAddTestEmail($from, $to)
+    {
+        $mail = Yii::createObject($this->mailModel);
+        $mail->attributes = [
+            'to' => $to,
+            'from' => $from,
+            'reply_to' => $from,
+            'from_name' => $from,
+            'subject' => 'Hello Hermes Mailing',
+            'body' => 'Hey! Thank you for using Hermes Mailing application.'
+        ];
+        if ($mail->save()) {
+            $this->stdout("An example email has been appended to the email queue. ID: {$mail->id}.");
+            return 0;
+        } else {
+            $errors = [];
+            foreach ($mail->errors as $attr => $err) {
+                $errors[$attr] = implode("\n", $err);
+            }
+            $this->stderr("Some errors happened:\n" . implode("\n\n", $errors));
+            return 1;
+        }
+        
     }
 
     
@@ -57,23 +84,27 @@ class DefaultController extends Controller
     }
 
 
+    /**
+     * Terminate application when user cancels operations or some error happens.
+     */
     public function userCancel()
     {
         $this->stdout("User canceled.\n", Console::FG_YELLOW);
         Yii::$app->end();
     }
 
-    public function checkGii()
+    /**
+     * @inheritdoc
+     * @see \yii\base\Controller::beforeAction()
+     */
+    public function beforeAction($action)
     {
-        if (!isset(Yii::$app->controllerMap['gii'])) {
-            $msg = "Command \"{$this->giiID}\" is not available.\n";
-            $msg .= "Please check to ensure the module is mounted and added to bootstrap phase.\n";
-            $this->stderr($msg, Console::FG_RED);
-            Yii::$app->end(1);
+        if (in_array($action->id, ['index', 'install', 'uninstall'])) {
+            // [TODO] Check if Mail model exists.
         }
+        return parent::beforeAction($action);
     }
-
-
+    
 }
 
 ?>

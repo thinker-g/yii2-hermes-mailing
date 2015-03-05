@@ -28,6 +28,19 @@ class UninstallAction extends Action
         }
     
     }
+    
+    /**
+     * Check whether Gii module is loaded.
+     */
+    public function checkGii()
+    {
+        if (!isset(Yii::$app->controllerMap['gii'])) {
+            $msg = "Command \"{$this->giiID}\" is not available.\n";
+            $msg .= "Please check to ensure the module is mounted and added to bootstrap phase.\n";
+            $this->controller->stderr($msg, Console::FG_RED);
+            Yii::$app->end(1);
+        }
+    }
 }
 
 ?>

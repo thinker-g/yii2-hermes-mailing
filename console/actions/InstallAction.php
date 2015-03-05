@@ -9,7 +9,7 @@ class InstallAction extends Action
 {
     public function run()
     {
-        $this->controller->checkGii();
+        $this->checkGii();
         $migration = $this->controller->getMigration();
         if (!$this->controller->confirm("Create table {$migration->tableName}?")) {
             $this->controller->userCancel();
@@ -41,6 +41,19 @@ class InstallAction extends Action
             $tableName
         );
         return str_replace(' ', null, ucwords($className));
+    }
+    
+    /**
+     * Check whether Gii module is loaded.
+     */
+    public function checkGii()
+    {
+        if (!isset(Yii::$app->controllerMap['gii'])) {
+            $msg = "Command \"{$this->giiID}\" is not available.\n";
+            $msg .= "Please check to ensure the module is mounted and added to bootstrap phase.\n";
+            $this->controller->stderr($msg, Console::FG_RED);
+            Yii::$app->end(1);
+        }
     }
     
 }
