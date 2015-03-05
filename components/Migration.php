@@ -4,10 +4,15 @@ namespace thinkerg\HermesMailing\components;
 use yii\db\Migration as YiiMigration;
 use Yii;
 
+/**
+ *
+ * @author tlsadmin
+ * @property string $tableName
+ */
 class Migration extends YiiMigration
 {
 
-    public $tableName = '{{%email_queue}}';
+    public $table = '{{%email_queue}}';
 
     public $columns = [
         'id' => 'int primary key auto_increment',
@@ -23,18 +28,10 @@ class Migration extends YiiMigration
         'retry_times' => 'int',
         'status' => 'varchar(10)',
         'send_by' => 'int',
-        'sent_by' => 'int', 
+        'sent_by' => 'int',
         'signature' => 'varchar(32)',
     ];
 
-    public function init()
-    {
-        parent::init();
-        $this->tableName = Yii::$app
-            ->getDb()
-            ->getSchema()
-            ->getRawTableName($this->tableName);
-    }
 
     public function up()
     {
@@ -46,6 +43,12 @@ class Migration extends YiiMigration
     {
         $this->dropTable($this->tableName);
         return true;
+    }
+
+    public function getTableName()
+    {
+        return Yii::$app->getDb()->getSchema()
+            ->getRawTableName($this->table);
     }
 
 }
