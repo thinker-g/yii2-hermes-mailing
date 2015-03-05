@@ -2,14 +2,13 @@
 namespace thinkerg\HermesMailing\components;
 
 use yii\db\Migration as YiiMigration;
-use yii\db\Exception as DbException;
 use Yii;
 
 class Migration extends YiiMigration
 {
-    
+
     public $tableName = '{{%email_queue}}';
-    
+
     public $columns = [
         'id' => 'int primary key auto_increment',
         'to' => 'varchar(50)',
@@ -27,19 +26,28 @@ class Migration extends YiiMigration
         'sent_by' => 'int', 
         'signature' => 'varchar(32)',
     ];
-    
+
+    public function init()
+    {
+        parent::init();
+        $this->tableName = Yii::$app
+            ->getDb()
+            ->getSchema()
+            ->getRawTableName($this->tableName);
+    }
+
     public function up()
     {
         $this->createTable($this->tableName, $this->columns);
         return true;
     }
-    
+
     public function down()
     {
         $this->dropTable($this->tableName);
         return true;
     }
-    
+
 }
 
 ?>
