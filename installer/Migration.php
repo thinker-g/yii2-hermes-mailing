@@ -1,5 +1,5 @@
 <?php
-namespace thinkerg\HermesMailing\components;
+namespace thinkerg\HermesMailing\installer;
 
 use yii\db\Migration as YiiMigration;
 use Yii;

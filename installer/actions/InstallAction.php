@@ -1,5 +1,5 @@
 <?php
-namespace thinkerg\HermesMailing\console\actions;
+namespace thinkerg\HermesMailing\installer\actions;
 
 use yii\base\Action;
 use yii\helpers\Console;

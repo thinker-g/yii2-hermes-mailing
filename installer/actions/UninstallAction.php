@@ -1,5 +1,5 @@
 <?php
-namespace thinkerg\HermesMailing\console\actions;
+namespace thinkerg\HermesMailing\installer\actions;
 
 use yii\base\Action;
 use yii\helpers\Console;
@@ -8,7 +8,7 @@ class UninstallAction extends Action
 {
     public function run() {
         $migration = $this->controller->getMigration();
-        $warning = "ATTENTION!\n";
+        $warning = "ATTENTION!!!\n";
         $this->controller->stdout($warning, Console::FG_RED, Console::BOLD);
     
         $warning = "You are about to uninstall the Hermes Mailing extension. ";
