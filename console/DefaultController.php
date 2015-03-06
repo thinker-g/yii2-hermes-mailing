@@ -318,13 +318,15 @@ class DefaultController extends Controller
         $mail = new \app\models\EmailQueue();
         $where = [$this->signatureCol => null];
         if ($mail->hasAttribute($this->sendByCol)) {
+            $where = ['and', $where];
             if ($signUnassigned) {
+                $where[] = ['or', [$this->sendByCol => ':serverID'], [$this->sendByCol => null]];
             } else {
+                $where[] = [$this->sendByCol => ':serverID'];
             }
-            
         }
-        
-        return $mail::updateAll($where);
+        $attrs = [$this->signatureCol => $this->getSignature($renewSignature)];
+        return $mail::updateAll($attrs, $where, [':serverID' => $this->serverId]);
     }
     
     /**
