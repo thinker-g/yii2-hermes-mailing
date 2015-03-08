@@ -45,7 +45,7 @@ class FillTestAction extends Action
 
     public function addTestEmail($from, $to)
     {
-        $mail = Yii::createObject($this->controller->mailModel);
+        $mail = Yii::createObject($this->controller->modelClass);
         $mail->attributes = [
             'to' => $to,
             'from' => $from,
