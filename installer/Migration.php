@@ -12,8 +12,6 @@ use Yii;
 class Migration extends YiiMigration
 {
 
-    // [TODO] DbConnection
-
     public $table = '{{%email_queue}}';
 
     public $columns = [
@@ -49,13 +47,13 @@ class Migration extends YiiMigration
 
     public function getTableName()
     {
-        return Yii::$app->getDb()->getSchema()
+        return $this->db->getSchema()
             ->getRawTableName($this->table);
     }
 
     public function isTableExists()
     {
-        return in_array($this->getTableName(), Yii::$app->getDb()->getSchema()->tableNames);
+        return in_array($this->getTableName(), $this->db->getSchema()->tableNames);
     }
 
 }

@@ -25,6 +25,7 @@ class InstallAction extends InstallerAction
                 'tableName' => $migration->tableName,
                 'modelClass' => $this->getModelClassName($migration->tableName)
             ];
+            Yii::$app->set('db', $migration->db);
             Yii::$app->runAction("/{$this->giiID}/model", $params);
 
             $this->controller->stdout("Install complete!\n", Console::FG_GREEN);
