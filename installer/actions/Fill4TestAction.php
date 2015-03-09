@@ -1,12 +1,11 @@
 <?php
 namespace thinkerg\HermesMailing\installer\actions;
 
-use yii\base\Action;
 use yii\helpers\Console;
 use yii\base\Exception;
 use Yii;
 
-class FillTestAction extends Action
+class Fill4TestAction extends InstallerAction
 {
 
     public $insertQuantity = 10000;
