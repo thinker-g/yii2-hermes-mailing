@@ -460,9 +460,9 @@ class DefaultController extends Controller
                 $err .= "please check if the attribute \"modelClass\" defines an available Model class." . PHP_EOL;
                 $this->stderr($err, Console::FG_RED);
                 Yii::$app->end(1);
-            } elseif (!in_array($action, ['install', 'uninstall', 'fill-test-data'])) {
-                $err = 'Only actions "install", "uninstall", "fill-test-data"';
-                $err .= ' are available in installer mode.' . PHP_EOL;
+            } elseif (!in_array($action, array_keys($this->installerActions))) {
+                $err = 'Only actions: ' . implode(', ', array_keys($this->installerActions));
+                $err .= ' are available in current installer mode.' . PHP_EOL;
                 $err .= 'Please set option "installerMode" to false (default) to use other commands.' . PHP_EOL;
                 $this->stderr($err, Console::FG_RED);
                 Yii::$app->end(1);
