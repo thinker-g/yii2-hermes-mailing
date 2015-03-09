@@ -15,10 +15,12 @@ class FillTestAction extends Action
 
     public $to = "to_{seq}@example.com";
 
+    public $barLen = 100;
+
     /**
      * Run to insert a certain number of test email entries.
      * Number can be set by attribute $insertQuantity.
-     * 
+     *
      * @return number
      */
     public function run()
@@ -27,10 +29,18 @@ class FillTestAction extends Action
         try {
             Yii::$app->db->createCommand('set autocommit=0;')->execute();
             for ($i = 0; $i < $this->insertQuantity; $i++) {
+                $this->controller->stdout("\r");
                 $this->addTestEmail(
                     str_replace('{seq}', $i, $this->from),
                     str_replace('{seq}', $i, $this->to)
                 );
+                $percent = (int)($i / $this->insertQuantity * $this->barLen);
+
+                $bar = str_pad('', $percent, '=', STR_PAD_LEFT);
+                $bar = str_pad ($bar, $this->barLen, ' ', STR_PAD_RIGHT);
+
+                $bar .= " " . $percent . '%';
+                $this->controller->stdout($bar, Console::FG_BLUE);
             }
             $trans->commit();
             $this->controller->stderr("$i mails inserted.\n", Console::FG_GREEN);
@@ -55,14 +65,16 @@ class FillTestAction extends Action
             'body' => 'Hey! Thank you for using Hermes Mailing application.'
         ];
         if ($mail->save()) {
-            $this->controller->stdout("An example email has been appended to the email queue. ID: {$mail->id}.\n");
+            $succeed = "An example email has been appended to the email queue. ID: {$mail->id}.";
+            $this->controller->stdout(str_pad($succeed, $this->barLen + 4, ' ', STR_PAD_RIGHT) . PHP_EOL);
             return 0;
         } else {
             $errors = [];
             foreach ($mail->errors as $attr => $err) {
                 $errors[$attr] = implode("\n", $err);
             }
-            $this->controller->stderr("Some errors happened:\n" . implode("\n\n", $errors));
+            $errMsg = str_pad("Some errors happened:", $this->barLen + 4, ' ', STR_PAD_RIGHT);
+            $this->controller->stderr($errMsg . PHP_EOL . implode("\n\n", $errors));
             return 1;
         }
 

@@ -214,11 +214,11 @@ class DefaultController extends Controller
 
     public $actions = [];
 
+    public $fillTestDataAction = 'thinkerg\HermesMailing\installer\actions\FillTestAction';
+
     protected $installAction = 'thinkerg\HermesMailing\installer\actions\InstallAction';
 
     protected $uninstallAction = 'thinkerg\HermesMailing\installer\actions\UninstallAction';
-
-    protected $fillTestDataAction = 'thinkerg\HermesMailing\installer\actions\FillTestAction';
 
     private $_migration;
 
@@ -357,11 +357,16 @@ class DefaultController extends Controller
      */
     public function options($actionID)
     {
+        empty($actionID) && ($actionID = $this->defaultAction);
         $actionOptions = [
             'send-queue' => ['signUnassigned', 'renewSignature']
         ];
 
-        return array_merge(parent::options($actionID), $actionOptions[$actionID]);
+        if (isset($actionOptions[$actionID])) {
+            return array_merge(parent::options($actionID), $actionOptions[$actionID]);
+        } else {
+            return parent::options($actionID);
+        }
 
     }
 
