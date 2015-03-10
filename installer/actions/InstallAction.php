@@ -2,6 +2,7 @@
 namespace thinkerg\HermesMailing\installer\actions;
 
 use yii\helpers\Console;
+use yii\db\Exception as DbException;
 use Yii;
 
 class InstallAction extends InstallerAction
@@ -15,21 +16,25 @@ class InstallAction extends InstallerAction
         }
 
         $this->controller->stdout("Migrating database...\n");
-        $migrated = $migration->up();
-
-        // Generate AR
-        if (!$migrated) {
-            $this->controller->stderr('Database migration failed!', Console::FG_RED);
-        } else {
-            $params = [
-                'tableName' => $migration->tableName,
-                'modelClass' => $this->getModelClassName($migration->tableName)
-            ];
-            Yii::$app->set('db', $migration->db);
-            Yii::$app->runAction("/{$this->giiID}/model", $params);
-
-            $this->controller->stdout("Install complete!\n", Console::FG_GREEN);
+        try {
+            $migrated = $migration->up();
+        } catch (DbException $e) {
+            $err = "\nError({$e->getCode()}): Database migration failed!" . PHP_EOL;
+            $err .= $e->getMessage() . PHP_EOL;
+            $this->controller->stderr($err, Console::FG_RED);
+            $this->controller->stderr("Installion aborted!" . PHP_EOL, Console::FG_YELLOW);
+            return 1;
         }
+
+        $params = [
+            'tableName' => $migration->tableName,
+            'modelClass' => $this->getModelClassName($migration->tableName)
+        ];
+        Yii::$app->set('db', $migration->db);
+        Yii::$app->runAction("/{$this->giiID}/model", $params);
+
+        $this->controller->stdout("Install complete!\n", Console::FG_GREEN);
+
     }
 
 }

@@ -14,7 +14,7 @@ class Fill4TestAction extends InstallerAction
 
     public $to = "to_{seq}@example.com";
 
-    public $barLen = 100;
+    public $barLen = 70;
 
     /**
      * Run to insert a certain number of test email entries.
