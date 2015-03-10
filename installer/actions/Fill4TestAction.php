@@ -33,18 +33,19 @@ class Fill4TestAction extends InstallerAction
                     str_replace('{seq}', $i, $this->from),
                     str_replace('{seq}', $i, $this->to)
                 );
-                $percent = (int)($i / $this->insertQuantity * $this->barLen);
+                $percent = $i / $this->insertQuantity;
 
-                $bar = str_pad('', $percent, '=', STR_PAD_LEFT);
+                $bar = str_pad('', (int)($this->barLen * $percent), '=', STR_PAD_LEFT);
                 $bar = str_pad ($bar, $this->barLen, ' ', STR_PAD_RIGHT);
 
-                $bar .= " " . $percent . '%';
+                $bar .= " " . (int)($percent * 100) + 1 . '%';
                 $this->controller->stdout($bar, Console::FG_BLUE);
             }
             $trans->commit();
             $this->controller->stderr("$i mails inserted.\n", Console::FG_GREEN);
         } catch (Exception $e) {
             $trans->rollBack();
+            throw $e;
             $this->controller->stderr("Some errors happened.\n", Console::FG_RED);
         }
 
