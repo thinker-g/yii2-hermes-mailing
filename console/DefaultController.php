@@ -244,6 +244,7 @@ class DefaultController extends Controller
      */
     public function actionSendQueue()
     {
+        $this->consoleLog("Emailing process (server id: {$this->serverId}) started.", true, console::FG_GREEN);
         while ($signedNum = $this->signEmails($this->signUnassigned, $this->renewSignature)) {
             $this->consoleLog("Signed $signedNum entries with signature $this->_signature.");
             $this->sendSigned();
