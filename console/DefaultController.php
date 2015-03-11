@@ -293,16 +293,7 @@ class DefaultController extends Controller
      */
     protected function sendSigned()
     {
-        $tplModel = $this->_templateModel;
-        $where = ['and',
-            [$this->signatureCol => $this->_signature],
-            ['or',
-                [$this->statusCol => self::ST_NEVER],
-                [$this->statusCol => self::ST_RETRY]
-            ]
-        ];
-
-        while ($fetchedMails = $tplModel::find()->where($where)->limit($this->pageSize)->all()) {
+        while ($fetchedMails = $this->findMailBySignature()) {
             foreach($fetchedMails as $mail) {
                 // $isSent = $this->getMailerAdaptor()->{$this->testMode ? 'testSend' : 'send'}($mail, $this);
                 $isSent = rand(0, 1);
@@ -312,6 +303,29 @@ class DefaultController extends Controller
                 $this->applySpamRules();
             }
         }
+    }
+
+    /**
+     * Fetch mail ARs with signature and additional conditions.
+     * @param string $limit
+     * @param string $where
+     * @return array Array of Email AR.
+     */
+    protected function findMailBySignature($limit = null, $where = null)
+    {
+        $condition = ['and',[$this->signatureCol => $this->_signature]];
+        is_null($limit) && $limit = $this->pageSize;
+        is_null($where) && $where = ['or',
+            [$this->statusCol => self::ST_NEVER],
+            [$this->statusCol => self::ST_RETRY]
+        ];
+        $condition[] = $where;
+        $tblModel = $this->_templateModel;
+
+        return $tblModel::find()
+            ->where($condition)
+            ->limit($limit)
+            ->all();
     }
 
     /**
