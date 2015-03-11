@@ -6,6 +6,7 @@ use yii\console\Controller;
 use yii\helpers\Console;
 use yii\base\Exception;
 use yii\base\Object;
+use yii\base\UnknownPropertyException;
 
 /**
  *
@@ -142,13 +143,25 @@ class DefaultController extends Controller
     public $spamRules;
 
     /**
-     * Mailer adaptor definition that used to really send email.
-     * 'class' element is the alias of adaptor class, all rests are attributes of the adaptor.
-     * The specified class must implement interface IMailerAdaptor and the send/testSend methods must return boolean.
-     * Default to array('class' => 'EmailQueue.adaptors.ExampleMailerAdaptor').
-     * @var array
+     * Mailer adaptor, can be string or configuration array.
+     * If this is string, program will firstly try to find application component of this id.
+     * If failed program will try to use it as a class name.
+     *
+     * @var string | array
      */
-    public $mailerAdaptor = 'EmailQueue.adaptors.ExampleMailerAdaptor';
+    public $mailer = 'mailer';
+
+
+    public $attrMap = [
+        'charset' => 'charset',
+        'from' => 'from',
+        'to' => 'to',
+        'replyTo' => 'reply_to',
+        'cc' => 'cc',
+        'bcc' => 'bcc',
+        'subject' => 'subject',
+        'htmlBody' => 'html_body'
+    ];
 
     /**
      * Instance of CDbConnection used.
@@ -161,15 +174,15 @@ class DefaultController extends Controller
 
     /**
      * Instance of mailer adaptor specified by EmailQueue::$mailerAdaptor.
-     * @var IMailerAdaptor
+     * @var \yii\mail\MailerInterface
      */
-    private $_mailerAdaptor;
+    private $_mailer;
 
     /**
      * Emailing counter of current process.
      * @var int
      */
-    private $_sendingCount = 0;
+    private $_sentCount = 0;
 
     /**
      * Used internally while installing.
@@ -239,6 +252,26 @@ class DefaultController extends Controller
         return 0;
     }
 
+    public function actionTrySend()
+    {
+        $model = $this->_templateModel->find()->one();
+
+        $mailer = $this->getMailer();
+        $message = $mailer->compose();
+
+        foreach ($this->attrMap as $msgAttr => $arAttr) {
+            try {
+                $message->{$msgAttr} = $model->{$arAttr};
+            } catch(UnknownPropertyException $e) {
+                var_dump($arAttr);
+            }
+        }
+
+
+        return 0;
+
+    }
+
     /**
      * Send email queue. This can be ran in multi-process mode.
      */
@@ -249,7 +282,7 @@ class DefaultController extends Controller
             $this->consoleLog("Signed $signedNum entries with signature $this->_signature.");
             $this->sendSigned();
             $this->consoleLog("{$signedNum} emails processed by signature: {$this->signature}.");
-            if (!empty($this->maxSent) && ($this->_sendingCount >= $this->maxSent)) {
+            if (!empty($this->maxSent) && ($this->_sentCount >= $this->maxSent)) {
                 $this->consoleLog("Max sent limit ({$this->maxSent}) reached, shutting down.");
                 break;
             }
@@ -297,7 +330,7 @@ class DefaultController extends Controller
             foreach($fetchedMails as $mail) {
                 // $isSent = $this->getMailerAdaptor()->{$this->testMode ? 'testSend' : 'send'}($mail, $this);
                 $isSent = rand(0, 1);
-                $this->_sendingCount++;
+                $this->_sentCount++;
                 $this->processEmailStatus($mail, $isSent);
                 $mail->save(false);
                 $this->applySpamRules();
@@ -378,11 +411,11 @@ class DefaultController extends Controller
             reset($this->spamRules);
         }
 
-        if ($this->_sendingCount >= $this->_nextStop[0]) {
+        if ($this->_sentCount >= $this->_nextStop[0]) {
             $this->consoleLog("Apply spam rule: sleep {$this->_nextStop[1]} secs when {$this->_nextStop[0]} emails sent.");
             $isSlept = sleep($this->_nextStop[1]);
             foreach ($this->spamRules as $stepCount => $sec) {
-                $tryCount = ((int)$this->_sendingCount / $stepCount) + $stepCount;
+                $tryCount = ((int)$this->_sentCount / $stepCount) + $stepCount;
                 if (empty($this->_nextStop)) {
                     $this->_nextStop = array($tryCount, $sec);
                 } else if ($tryCount < $this->_nextStop[0]) {
@@ -412,11 +445,24 @@ class DefaultController extends Controller
     /**
      * Mailer adaptor getter.
      * @param bool $renew Whether to return a new mailer adaptor.
-     * @return IMailerAdaptor
+     * @return \yii\mail\MailerInterface
      */
-    public function getMailerAdaptor($renew = false)
+    public function getMailer($renew = false)
     {
-        return new Object();
+        if (is_null($this->_mailer) || $renew) {
+            if (is_string($this->mailer)) {
+                try {
+                    $this->_mailer = Yii::$app->get($this->mailer);
+                } catch (Exception $e) {
+                    $this->_mailer = Yii::createObject($this->mailer);
+                }
+            } elseif (is_array($this->mailer)) {
+                $this->_mailer = Yii::createObject($this->mailer);
+            } else {
+                throw new Exception('Unknown mailer configuration.');
+            }
+        }
+        return $this->_mailer;
     }
 
     /**
