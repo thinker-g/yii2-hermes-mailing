@@ -130,7 +130,7 @@ class DefaultController extends Controller
      * Default to 0.
      * @var int
      */
-    public $serverId = 0;
+    public $serverID = 0;
 
     /**
      * When this number of mails are sent, the program will shutdown after current signed mails are all processed.
@@ -293,7 +293,7 @@ class DefaultController extends Controller
      */
     public function actionSendQueue()
     {
-        $this->consoleLog("Emailing process (server id: {$this->serverId}) started.", true, console::FG_GREEN);
+        $this->consoleLog("Emailing process (server id: {$this->serverID}) started.", true, console::FG_GREEN);
         while ($signedNum = $this->signEmails($this->signUnassigned, $this->renewSignature)) {
             $this->consoleLog("Signed $signedNum entries with signature $this->_signature.");
             $this->sendSigned();
@@ -303,7 +303,7 @@ class DefaultController extends Controller
                 break;
             }
         }
-        $this->consoleLog("Emailing process (server id: {$this->serverId}) stopped.", true, console::FG_GREEN);
+        $this->consoleLog("Emailing process (server id: {$this->serverID}) stopped.", true, console::FG_GREEN);
         return 0;
     }
 
@@ -322,9 +322,9 @@ class DefaultController extends Controller
         if ($modelClass->hasAttribute($this->sendByAttr)) {
             $where = ['and', $where];
             if ($signUnassigned) {
-                $where[] = ['or', [$this->sendByAttr => $this->serverId], [$this->sendByAttr => null]];
+                $where[] = ['or', [$this->sendByAttr => $this->serverID], [$this->sendByAttr => null]];
             } else {
-                $where[] = [$this->sendByAttr => $this->serverId];
+                $where[] = [$this->sendByAttr => $this->serverID];
             }
         }
         $cols = [$this->signatureAttr => $this->getSignature($renewSignature)];
@@ -345,7 +345,7 @@ class DefaultController extends Controller
         while ($fetchedMails = $this->findMailBySignature($this->pageSize)) {
             foreach($fetchedMails as $this->_fetchedMail) {
                 $msg = $this->assembleMailMessage($this->_fetchedMail);
-                $isSent = $this->getMailer()->send($msg);
+                $isSent = $this->testMode ? rand(0,1) : $this->getMailer()->send($msg);
                 $this->_sentCount++;
                 $this->processEmailStatus($this->_fetchedMail, $isSent);
                 $this->_fetchedMail->save(false);
@@ -444,7 +444,7 @@ class DefaultController extends Controller
         }
 
         if ($this->_sentCount >= $this->_nextStop[0]) {
-            $this->consoleLog("Apply spam rule: sleep {$this->_nextStop[1]} secs when {$this->_nextStop[0]} emails sent.");
+            $this->consoleLog("Apply spam rule: sleep {$this->_nextStop[1]} secs after {$this->_nextStop[0]} sent.");
             $isSlept = sleep($this->_nextStop[1]);
             foreach ($this->spamRules as $stepCount => $sec) {
                 $tryCount = ((int)$this->_sentCount / $stepCount) + $stepCount;
@@ -469,7 +469,7 @@ class DefaultController extends Controller
     {
         if ($renew || is_null($this->_signature)) {
             usleep(1);
-            $this->_signature = md5(microtime(true) . $this->serverId);
+            $this->_signature = md5(microtime(true) . $this->serverID);
         }
         return $this->_signature;
     }
@@ -522,7 +522,13 @@ class DefaultController extends Controller
      * @param bool $returnLine
      * @param bool | int $padLength Dots will be appended till this length.
      */
-    public function consoleLog($msg, $enableTS = true, $fgColor = Console::FG_BLUE, $returnLine = true, $padLength = false)
+    public function consoleLog(
+        $msg,
+        $enableTS = true,
+        $fgColor = Console::FG_BLUE,
+        $returnLine = true,
+        $padLength = false
+    )
     {
         if ($enableTS) {
             $msg = '[' . date('Y-m-d H:i:s') . '] ' . $msg;
