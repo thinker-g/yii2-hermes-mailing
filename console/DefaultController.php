@@ -591,7 +591,17 @@ class DefaultController extends Controller
     {
         empty($actionID) && ($actionID = $this->defaultAction);
         $actionOptions = [
-            'send-queue' => ['signUnassigned', 'renewSignature']
+            'send-queue' => [
+                'testMode',
+                'serverID',
+                'maxSent',
+                'signSize',
+                'pageSize',
+                'retryTimes',
+                'signUnassigned',
+                'renewSignature',
+                'spamRules'
+            ]
         ];
 
         if (isset($actionOptions[$actionID])) {
