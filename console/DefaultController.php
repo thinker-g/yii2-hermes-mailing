@@ -271,20 +271,16 @@ class DefaultController extends Controller
         }
         return $actions;
     }
-
+    
     public function actionIndex()
     {
         // $this->run("/help", [$this->id]);
-        $handler = function($e) {
-            $mail = $e->sender->fetchedMail;
-            $e->sender->attrMap['body'] = $mail->is_html ? 'htmlBody' : 'textBody';
-        };
-        $this->on(self::EVENT_BEFORE_COMPOSE_MSG, $handler);
-        $message = $this->getMailer()->compose();
-        $this->_fetchedMail = $this->_templateModel->find()->one();
-        $this->assembleMailMessage($this->_fetchedMail);
-
-        var_dump($this->getMailer()->send($message));
+        
+        for ($i = 1; $i < 100; $i++) {
+            $this->_sentCount = $i;
+            $this->applySpamRules();
+        }
+    
         return 0;
     }
 
@@ -439,19 +435,22 @@ class DefaultController extends Controller
             krsort($this->spamRules);
             unset($this->spamRules[0]);
             end($this->spamRules);
-            $this->_nextStop = array(key($this->spamRules), current($this->spamRules));
+            $this->_nextStop = [key($this->spamRules), current($this->spamRules)];
             reset($this->spamRules);
         }
 
-        if ($this->_sentCount >= $this->_nextStop[0]) {
+        if ($this->_sentCount == $this->_nextStop[0]) {
             $this->consoleLog("Apply spam rule: sleep {$this->_nextStop[1]} secs after {$this->_nextStop[0]} sent.");
             $isSlept = sleep($this->_nextStop[1]);
+            
+            $this->_nextStop[0] += key($this->spamRules);
+            $this->_nextStop[1] = current($this->spamRules);
+            echo "assume: " . json_encode($this->_nextStop) . PHP_EOL;
             foreach ($this->spamRules as $stepCount => $sec) {
-                $tryCount = ((int)$this->_sentCount / $stepCount) + $stepCount;
-                if (empty($this->_nextStop)) {
-                    $this->_nextStop = array($tryCount, $sec);
-                } else if ($tryCount < $this->_nextStop[0]) {
-                    $this->_nextStop = array($tryCount, $sec);
+                $tryCount = $this->_sentCount + $stepCount - ($this->_sentCount % $stepCount);
+                echo "try: " . $tryCount . PHP_EOL;
+                if ($tryCount <= $this->_nextStop[0]) {
+                    $this->_nextStop = [$tryCount, $sec];
                 }
             }
             return $isSlept === 0;
