@@ -271,16 +271,10 @@ class DefaultController extends Controller
         }
         return $actions;
     }
-    
+
     public function actionIndex()
     {
-        // $this->run("/help", [$this->id]);
-        
-        for ($i = 1; $i < 100; $i++) {
-            $this->_sentCount = $i;
-            $this->applySpamRules();
-        }
-    
+        $this->run("/help", [$this->id]);
         return 0;
     }
 
@@ -413,7 +407,10 @@ class DefaultController extends Controller
                 // First sending and retryable
                 $mail->{$this->retryAttr} = 0;
                 $mail->{$this->statusAttr} = self::ST_RETRY;
-            } elseif (++$mail->{$this->retryAttr} < $this->retryTimes && $mail->{$this->statusAttr} == self::ST_RETRY) {
+            } elseif (
+                ++$mail->{$this->retryAttr} < $this->retryTimes
+                && $mail->{$this->statusAttr} == self::ST_RETRY
+            ) {
                 // Retry sending and still retryable for next time
             } else {
                 // Final failed.
@@ -432,26 +429,21 @@ class DefaultController extends Controller
         if (empty ($this->spamRules) || ! is_array($this->spamRules)) {
             return false;
         } elseif (empty ($this->_nextStop)) {
-            krsort($this->spamRules);
             unset($this->spamRules[0]);
-            end($this->spamRules);
-            $this->_nextStop = [key($this->spamRules), current($this->spamRules)];
-            reset($this->spamRules);
+            krsort($this->spamRules);
+            $this->_nextStop[1] = end($this->spamRules);
+            $this->_nextStop[0] = key($this->spamRules);
         }
 
         if ($this->_sentCount == $this->_nextStop[0]) {
             $this->consoleLog("Apply spam rule: sleep {$this->_nextStop[1]} secs after {$this->_nextStop[0]} sent.");
             $isSlept = sleep($this->_nextStop[1]);
-            
+            // calculate next stop
+            $this->_nextStop[1] = reset($this->spamRules);
             $this->_nextStop[0] += key($this->spamRules);
-            $this->_nextStop[1] = current($this->spamRules);
-            echo "assume: " . json_encode($this->_nextStop) . PHP_EOL;
             foreach ($this->spamRules as $stepCount => $sec) {
                 $tryCount = $this->_sentCount + $stepCount - ($this->_sentCount % $stepCount);
-                echo "try: " . $tryCount . PHP_EOL;
-                if ($tryCount <= $this->_nextStop[0]) {
-                    $this->_nextStop = [$tryCount, $sec];
-                }
+                ($tryCount <= $this->_nextStop[0]) && ($this->_nextStop = [$tryCount, $sec]);
             }
             return $isSlept === 0;
         }
