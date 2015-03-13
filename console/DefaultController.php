@@ -184,6 +184,13 @@ class DefaultController extends Controller
      */
     public $spamRules;
 
+    /**
+     * Set to true to use "applySpamRulesLite()" or false to user "applySpamRules()"
+     * to apply anti spam rules.
+     * @var bool
+     */
+    public $useLiteAntiSpams = false;
+
     /******************** End command options *******************/
 
     /*
@@ -272,7 +279,7 @@ class DefaultController extends Controller
         return $actions;
     }
 
-    public function actionIndex()
+    public function actionIndex($sendCount = 10000)
     {
         $this->run("/help", [$this->id]);
         return 0;
@@ -339,7 +346,7 @@ class DefaultController extends Controller
                 $this->_sentCount++;
                 $this->processEmailStatus($this->_fetchedMail, $isSent);
                 $this->_fetchedMail->save(false);
-                $this->applySpamRules();
+                $this->{$this->useLiteAntiSpams ? "applySpamRulesLite" : "applySpamRules"}();
             }
         }
     }
@@ -420,30 +427,71 @@ class DefaultController extends Controller
     }
 
     /**
-     * Pause system by calculating sent count of NEXT STOP.
-     * Only do one loop on spamRules array to calculate next stop, while sendingCount reaches to "NEXT STOP".
+     * Apply anti-spam rules: when M mails are sent, pause for N seconds,
+     * where M and corresponding N is set in attributes $spamRules.
+     * The efficiency of this function depends on the minimal step count (M value) in the spam rules.
+     * When the minimum step count is greater than 12, it's recommanded to use method "applySpamRules"
+     * to save more time. To use that one, set attribute "useLiteAntiSpams" to false.
      * @return bool Whether system slept or not.
      */
-    protected function applySpamRules()
+    protected function applySpamRulesLite($isTest = false)
     {
-        if (empty ($this->spamRules) || ! is_array($this->spamRules)) {
-            return false;
-        } elseif (empty ($this->_nextStop)) {
-            unset($this->spamRules[0]);
+        if (empty($this->spamRules) || ! is_array($this->spamRules)) {
+            return false; // return is spamRules is not set.
+        } elseif (empty($this->_nextStop)) { //first time to apply spam rules
+            $this->_nextStop = krsort($this->spamRules) || true;
+        }
+        foreach ($this->spamRules as $stopCount => $sec) {
+            if ($this->_sentCount % $stopCount == 0) {
+                $isTest || $this->consoleLog(
+                    "[lite] Apply spam rule: sleep {$sec} secs after {$stopCount} sent."
+                );
+                return $isTest || sleep($sec);
+            }
+        }
+    }
+
+    /**
+     * Apply anti-spam rules: when M mails are sent, pause for N seconds,
+     * where M and corresponding N is set in attributes $spamRules.
+     * This method applys pausing by calculating next stop count.
+     * The efficiency of this function depends on the minimal step count (M value) in the spam rules.
+     * When the minimum step count is greater than 12, it's recommanded to use this one;
+     * otherwise "applySpamRulesLite" (the lite version of this method) works more efficiently.
+     * To use the lite version, set attribute "useLiteAntiSpams" to true.
+     * @return bool Whether system slept or not.
+     */
+    protected function applySpamRules($isTest = false)
+    {
+        if (empty($this->spamRules) || ! is_array($this->spamRules)) {
+            return false; // return is spamRules is not set.
+        } elseif (empty($this->_nextStop)) {
+            // first time to apply spam rules, init the nextStop with biggest stop count
+            unset($this->spamRules[0]); // 0 sent to pause makes no sense
             krsort($this->spamRules);
             $this->_nextStop[1] = end($this->spamRules);
             $this->_nextStop[0] = key($this->spamRules);
         }
 
         if ($this->_sentCount == $this->_nextStop[0]) {
-            $this->consoleLog("Apply spam rule: sleep {$this->_nextStop[1]} secs after {$this->_nextStop[0]} sent.");
-            $isSlept = sleep($this->_nextStop[1]);
-            // calculate next stop
+            $isTest || $this->consoleLog(
+                "Apply spam rule: sleep {$this->_nextStop[1]} secs after {$this->_nextStop[0]} sent."
+            );
+            $isSlept = $isTest || sleep($this->_nextStop[1]);
+            // start to calculate next stop sent count
             $this->_nextStop[1] = reset($this->spamRules);
             $this->_nextStop[0] += key($this->spamRules);
+            // find out the least next stop count
             foreach ($this->spamRules as $stepCount => $sec) {
                 $tryCount = $this->_sentCount + $stepCount - ($this->_sentCount % $stepCount);
                 ($tryCount <= $this->_nextStop[0]) && ($this->_nextStop = [$tryCount, $sec]);
+            }
+            // find ou the correct stop second match the least next stop count
+            foreach ($this->spamRules as $stepCount => $sec) {
+                if ($this->_nextStop[0] % $stepCount == 0) {
+                    $this->_nextStop[1] = $sec;
+                    break;
+                }
             }
             return $isSlept === 0;
         }
