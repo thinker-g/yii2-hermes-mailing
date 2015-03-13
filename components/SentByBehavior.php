@@ -1,0 +1,35 @@
+<?php
+namespace thinkerg\HermesMailing\components;
+
+use yii\base\Behavior;
+use yii\db\BaseActiveRecord;
+use yii\base\Event;
+use Yii;
+
+class SentByBehavior extends Behavior
+{
+
+    public $sentByAttr = 'sent_by';
+    
+    /**
+     * @overriding
+     * @see \yii\base\Behavior::events()
+     */
+    public function events()
+    {
+        return [
+            BaseActiveRecord::EVENT_BEFORE_UPDATE => 'recordSentServer'
+        ];
+        
+    }
+    
+    public function recordSentServer(Event $e)
+    {
+        if (isset(Yii::$app->controller->serverID)) {
+            $this->owner->{$this->sentByAttr} = Yii::$app->controller->serverID;
+        }
+    }
+
+}
+
+?>
