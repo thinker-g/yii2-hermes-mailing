@@ -263,7 +263,8 @@ class DefaultController extends Controller
     public $installerActions = [
         'install' => 'thinkerg\HermesMailing\installer\actions\InstallAction',
         'uninstall' => 'thinkerg\HermesMailing\installer\actions\UninstallAction',
-        'fill4test' => 'thinkerg\HermesMailing\installer\actions\Fill4TestAction'
+        'fill4test' => 'thinkerg\HermesMailing\installer\actions\Fill4TestAction',
+        'determine-anti-spams' => 'thinkerg\HermesMailing\installer\actions\DetermineAntiSpamsAction'
     ];
 
     /**
@@ -343,10 +344,11 @@ class DefaultController extends Controller
             foreach($fetchedMails as $this->_fetchedMail) {
                 $msg = $this->assembleMailMessage($this->_fetchedMail);
                 $isSent = $this->testMode ? rand(0,1) : $this->getMailer()->send($msg);
-                $this->_sentCount++;
                 $this->processEmailStatus($this->_fetchedMail, $isSent);
                 $this->_fetchedMail->save(false);
-                $this->{$this->useLiteAntiSpams ? "applySpamRulesLite" : "applySpamRules"}();
+                $this->{
+                    $this->useLiteAntiSpams ? "applySpamRulesLite" : "applySpamRules"
+                }(++$this->_sentCount);
             }
         }
     }
@@ -432,9 +434,13 @@ class DefaultController extends Controller
      * The efficiency of this function depends on the minimal step count (M value) in the spam rules.
      * When the minimum step count is greater than 12, it's recommanded to use method "applySpamRules"
      * to save more time. To use that one, set attribute "useLiteAntiSpams" to false.
+     *
+     * @param $currentSent int Number of mails sent.
+     * @param $isTest bool Set to false for running perfermance test, where will not perform actual system sleep.
+     *
      * @return bool Whether system slept or not.
      */
-    protected function applySpamRulesLite($isTest = false)
+    public function applySpamRulesLite($currentSent, $isTest = false)
     {
         if (empty($this->spamRules) || ! is_array($this->spamRules)) {
             return false; // return is spamRules is not set.
@@ -442,7 +448,7 @@ class DefaultController extends Controller
             $this->_nextStop = krsort($this->spamRules) || true;
         }
         foreach ($this->spamRules as $stopCount => $sec) {
-            if ($this->_sentCount % $stopCount == 0) {
+            if ($currentSent % $stopCount == 0) {
                 $isTest || $this->consoleLog(
                     "[lite] Apply spam rule: sleep {$sec} secs after {$stopCount} sent."
                 );
@@ -459,9 +465,13 @@ class DefaultController extends Controller
      * When the minimum step count is greater than 12, it's recommanded to use this one;
      * otherwise "applySpamRulesLite" (the lite version of this method) works more efficiently.
      * To use the lite version, set attribute "useLiteAntiSpams" to true.
+     *
+     * @param $currentSent int Number of mails sent.
+     * @param $isTest bool Set to false for running perfermance test, where will not perform actual system sleep.
+     *
      * @return bool Whether system slept or not.
      */
-    protected function applySpamRules($isTest = false)
+    public function applySpamRules($currentSent, $isTest = false)
     {
         if (empty($this->spamRules) || ! is_array($this->spamRules)) {
             return false; // return is spamRules is not set.
@@ -473,7 +483,7 @@ class DefaultController extends Controller
             $this->_nextStop[0] = key($this->spamRules);
         }
 
-        if ($this->_sentCount == $this->_nextStop[0]) {
+        if ($currentSent == $this->_nextStop[0]) {
             $isTest || $this->consoleLog(
                 "Apply spam rule: sleep {$this->_nextStop[1]} secs after {$this->_nextStop[0]} sent."
             );
@@ -483,7 +493,7 @@ class DefaultController extends Controller
             $this->_nextStop[0] += key($this->spamRules);
             // find out the least next stop count
             foreach ($this->spamRules as $stepCount => $sec) {
-                $tryCount = $this->_sentCount + $stepCount - ($this->_sentCount % $stepCount);
+                $tryCount = $currentSent + $stepCount - ($currentSent % $stepCount);
                 ($tryCount <= $this->_nextStop[0]) && ($this->_nextStop = [$tryCount, $sec]);
             }
             // find ou the correct stop second match the least next stop count
