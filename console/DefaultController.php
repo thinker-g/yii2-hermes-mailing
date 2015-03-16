@@ -115,6 +115,15 @@ class DefaultController extends Controller
         'html_body' => 'htmlBody'
     ];
 
+    /**
+     * Behavior to record the server ID of current process into emails attribute,
+     * after the mail is sent by the process.
+     * The attribute is specified by the "sentByAttr" attribute of this behavior object.
+     * And default "sentByAttr" is "sent_by".
+     * @var string|array
+     */
+    public $sentByBehavior = 'thinkerg\HermesMailing\components\SentByBehavior';
+
     /******************** Begin command options *******************/
 
     /**
@@ -280,7 +289,7 @@ class DefaultController extends Controller
         return $actions;
     }
 
-    public function actionIndex($sendCount = 10000)
+    public function actionIndex($id)
     {
         $this->run("/help", [$this->id]);
         return 0;
@@ -293,7 +302,7 @@ class DefaultController extends Controller
     {
         $this->consoleLog("Emailing process (server id: {$this->serverID}) started.", true, console::FG_GREEN);
         while ($signedNum = $this->signEmails($this->signUnassigned, $this->renewSignature)) {
-            $this->consoleLog("Signed $signedNum entries with signature $this->_signature.");
+            $this->consoleLog("Signed $signedNum entries with signature: $this->_signature.");
             $this->sendSigned();
             $this->consoleLog("{$signedNum} emails processed by signature: {$this->signature}.");
             if (!empty($this->maxSent) && ($this->_sentCount >= $this->maxSent)) {
@@ -342,6 +351,12 @@ class DefaultController extends Controller
     {
         while ($fetchedMails = $this->findMailBySignature($this->pageSize)) {
             foreach($fetchedMails as $this->_fetchedMail) {
+                if ($this->sentByBehavior) {
+                    $this->_fetchedMail->attachBehavior(
+                        $this->sentByBehavior->className(),
+                        $this->sentByBehavior
+                    );
+                }
                 $msg = $this->assembleMailMessage($this->_fetchedMail);
                 $isSent = $this->testMode ? rand(0,1) : $this->getMailer()->send($msg);
                 $this->processEmailStatus($this->_fetchedMail, $isSent);
@@ -603,6 +618,10 @@ class DefaultController extends Controller
             //Initialize template model of the mail AR.
             $this->_templateModel = Yii::createObject($this->modelClass);
             $this->_db = $this->_templateModel->getDb();
+
+            if ($this->sentByBehavior) {
+                $this->sentByBehavior = Yii::createObject($this->sentByBehavior);
+            }
 
         } catch (\ReflectionException $refE) {
             $route = explode('/', Yii::$app->getRequest()->resolve()[0]);
