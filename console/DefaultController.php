@@ -335,6 +335,11 @@ class DefaultController extends Controller
             } else {
                 $where[] = [$this->assignedToSvrAttr => $this->serverID];
             }
+        } elseif (!$signUnassigned) {
+            $msg = "Cannot find any entries to sign, while 'signUnassigned' is false ";
+            $msg .= "and attribute '{$this->assignedToSvrAttr}' is missing in model class.";
+            $this->consoleLog($msg, true, Console::FG_YELLOW);
+            return 0;
         }
         $cols = [$this->signatureAttr => $this->getSignature($renewSignature)];
         $queryBuilder = $this->_db->getQueryBuilder();
