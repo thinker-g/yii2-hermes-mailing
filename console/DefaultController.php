@@ -81,10 +81,10 @@ class DefaultController extends Controller
     /**
      * Column (attribute name) of email table to assign emails to be send by the processes from specific server.
      * Optional attribute, will only take effects when it exists in the model.
-     * Default to "send_by".
+     * Default to "assigned_to_svr".
      * @var string
      */
-    public $sendByAttr = 'send_by';
+    public $assignedToSvrAttr = 'assigned_to_svr';
 
     /**
      * Mailer adaptor, can be string or configuration array.
@@ -170,7 +170,7 @@ class DefaultController extends Controller
     public $retryTimes = 0;
 
     /**
-     * Whether to sign rows whose "send_by" attribute equals to $this->serverId.
+     * Whether to sign rows whose "assignedToSvr" attribute equals to $this->serverId.
      * @var bool
      */
     public $signUnassigned = true;
@@ -321,17 +321,19 @@ class DefaultController extends Controller
      * Take effects only when column specified by EmailQueueCommand::$sendByCol exists.
      * @param bool $renewSignature Whether to renew the signature when sign emails every time.
      *
+     * @return int The numbers of mails signed this time.
+     *
      */
     protected function signEmails($signUnassigned = true, $renewSignature = false)
     {
         $modelClass = $this->_templateModel;
         $where = [$this->signatureAttr => null];
-        if ($modelClass->hasAttribute($this->sendByAttr)) {
+        if ($modelClass->hasAttribute($this->assignedToSvrAttr)) {
             $where = ['and', $where];
             if ($signUnassigned) {
-                $where[] = ['or', [$this->sendByAttr => $this->serverID], [$this->sendByAttr => null]];
+                $where[] = ['or', [$this->assignedToSvrAttr => $this->serverID], [$this->assignedToSvrAttr => null]];
             } else {
-                $where[] = [$this->sendByAttr => $this->serverID];
+                $where[] = [$this->assignedToSvrAttr => $this->serverID];
             }
         }
         $cols = [$this->signatureAttr => $this->getSignature($renewSignature)];

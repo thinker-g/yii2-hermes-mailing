@@ -27,7 +27,7 @@ class Migration extends YiiMigration
         'last_sent' => 'timestamp',
         'retry_times' => 'int',
         'status' => 'varchar(10)',
-        'send_by' => 'int',
+        'assigned_to_svr' => 'int',
         'sent_by' => 'int',
         'signature' => 'varchar(32)',
     ];
