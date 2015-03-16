@@ -1,20 +1,42 @@
 <?php
+/**
+ * @link https://github.com/thinker-g/yii2-hermes-mailing
+ * @copyright Copyright (c) Thinker_g (Jiyan.guo@gmail.com)
+ * @license MIT
+ * @version v1.0.0
+ * @author Thinker_g
+ */
+
 namespace thinkerg\HermesMailing\console;
 
 use Yii;
 use yii\console\Controller;
 use yii\helpers\Console;
 use yii\base\Exception;
-use yii\base\Object;
-use yii\base\UnknownPropertyException;
-use yii\base\Event;
 use yii\mail\MailEvent;
 
 /**
- * Hermes Mailer command.
+ * Hermes Mailing is a high performance multi-process mailing solution for an online application.
+ * It is capable to handle massive email sending work in short time, thanks to its multi-process implementation.
+ * Beyond the basic sending functionality, it provides a rich number of options, which allow user to customize it
+ * to fit different environments, or to balance pressures among servers.
+ * Some necessary features such as anti-spamming are also integrated.
+ *
+ * Almost every part of the solution can be customized according to your project. So you could either to install
+ * it as a new component of your application, or integrate it to your existing emailing system just by setting up
+ * a few parameters.
+ *
+ * A very rough test data for reference:
+ * On our PC, we start a new process every 10 seconds by cron. It takes only 10 minutes to process 100,000 emails,
+ * without any optimization.
+ * (The time cost on connecting SMTP server is not counted in as it's unpredicatable.)
+ * Then by simply creating an index on the database table, the performance has been increased 15%.
+ * On a properly configured database server it can work even faster by increasing the concurrency of process.
+ *
+ * @since v1.0.0
  * @author Thinker_g
  *
- * @property \yii\db\ActiveRecord The mail AR retrieved from database and to be sent.
+ * @property \yii\db\ActiveRecord $fetchedMail The mail AR retrieved from database and to be sent.
  */
 class DefaultController extends Controller
 {
@@ -52,7 +74,7 @@ class DefaultController extends Controller
      * This is for using some already existed AR. Won't be needed for default installation.
      * @var string
      */
-    public $modelClass = 'app\models\EmailQueue';
+    public $modelClass = 'app\models\HermesMail';
 
     /**
      * Column (attribute name) of email table to store process signature.
@@ -289,7 +311,11 @@ class DefaultController extends Controller
         return $actions;
     }
 
-    public function actionIndex($id)
+    /**
+     * Display this help message.
+     * @return number
+     */
+    public function actionIndex()
     {
         $this->run("/help", [$this->id]);
         return 0;
