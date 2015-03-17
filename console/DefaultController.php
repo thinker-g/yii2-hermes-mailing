@@ -74,7 +74,7 @@ class DefaultController extends Controller
      * This is for using some already existed AR. Won't be needed for default installation.
      * @var string
      */
-    public $modelClass = 'app\models\HermesMail';
+    public $modelClass = 'app\\models\\HermesMail';
 
     /**
      * Column (attribute name) of email table to store process signature.

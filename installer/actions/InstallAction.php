@@ -13,6 +13,11 @@ use yii\helpers\Console;
 use yii\db\Exception as DbException;
 use Yii;
 
+/**
+ * @author tlsadmin
+ *
+ * @property \thinkerg\HermesMailing\console\DefaultController $controller
+ */
 class InstallAction extends InstallerAction
 {
     public function run()
@@ -34,9 +39,14 @@ class InstallAction extends InstallerAction
             return 1;
         }
 
+        $fqn = explode('\\', $this->controller->modelClass);
+        $modelClass = array_pop($fqn);
+        $ns = implode('\\', $fqn);
+
         $params = [
             'tableName' => $migration->tableName,
-            'modelClass' => $this->getModelClassName($migration->tableName)
+            'modelClass' => $modelClass,
+            'ns' => $ns
         ];
         Yii::$app->set('db', $migration->db);
         Yii::$app->runAction("/{$this->giiID}/model", $params);
