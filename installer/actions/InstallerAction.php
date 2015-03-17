@@ -39,7 +39,7 @@ class InstallerAction extends Action
 
     protected function getModelClassName($tableName)
     {
-        $db = Yii::$app->getDb();
+        $db = $this->migration->db;
         $className = preg_replace(
             ["/(?:^{$db->tablePrefix}|$db->tablePrefix$)/", '/_/'],
             [null, ' '],

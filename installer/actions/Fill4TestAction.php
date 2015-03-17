@@ -32,9 +32,9 @@ class Fill4TestAction extends InstallerAction
      */
     public function run()
     {
-        $trans = Yii::$app->db->beginTransaction();
+        $trans = $this->migration->db->beginTransaction();
         try {
-            Yii::$app->db->createCommand('set autocommit=0;')->execute();
+            $this->migration->db->createCommand('set autocommit=0;')->execute();
             for ($i = 0; $i < $this->insertQuantity; $i++) {
                 $this->controller->stdout("\r");
                 $this->addTestEmail(
