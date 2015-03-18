@@ -622,7 +622,7 @@ class DefaultController extends Controller
     public function consoleLog(
         $msg,
         $enableTS = true,
-        $fgColor = Console::FG_BLUE,
+        $fgColor = null,
         $returnLine = true,
         $padLength = false
     )
