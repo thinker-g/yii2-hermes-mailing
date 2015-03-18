@@ -171,17 +171,17 @@ class DefaultController extends Controller
 
     /**
      * How many emails to sign each time.
-     * Default to 10.
+     * Default to 100.
      * @var int
      */
-    public $signSize = 50;
+    public $signSize = 100;
 
     /**
      * How many signed emails are loaded to memory each time.
-     * Default to 10.
+     * Default to 50.
      * @var int
      */
-    public $pageSize = 10;
+    public $pageSize = 50;
 
     /**
      * How many times to resend after first send is failed.
