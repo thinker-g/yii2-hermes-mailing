@@ -16,22 +16,28 @@ use yii\base\Exception;
 use yii\mail\MailEvent;
 
 /**
- * Hermes Mailing is a high performance multi-process mailing solution for an online application.
- * It is capable to handle massive email sending work in short time, thanks to its multi-process implementation.
- * Beyond the basic sending functionality, it provides a rich number of options, which allow user to customize it
- * to fit different environments, or to balance pressures among servers.
- * Some necessary features such as anti-spamming are also integrated.
+ * Hermes Mailing's main command controller.
+ * When this starts up, it will firstly call [[signMails()]] to update signature column of the table
+ * specified by [[modelClass]]. Each process has a unique sigature, so once a mail entry is signed by one
+ * process it won't be taken by any other process. Then we can startup mailer processes parallely. 
+ * The number of entries signed each time is specified by option [[signSize]].
  *
- * Almost every part of the solution can be customized according to your project. So you could either to install
- * it as a new component of your application, or integrate it to your existing emailing system just by setting up
- * a few parameters.
+ * After the signing, the process will then fetch its signed mails in chunk, the number fetched each time
+ * is specified by the option [[pageSize]], this parameter is use to controller the memory usage
+ * of a single process.
  *
- * A very rough test data for reference:
- * On our PC, we start a new process every 10 seconds by cron. It takes only 10 minutes to process 100,000 emails,
- * without any optimization.
- * (The time cost on connecting SMTP server is not counted in as it's unpredicatable.)
- * Then by simply creating an index on the database table, the performance has been increased 15%.
- * On a properly configured database server it can work even faster by increasing the concurrency of process.
+ * After a chunk of mail is fetched from database, it will call the "mailer" component to send them one by one.
+ *
+ * For better extendability, the DB connection is returned from the instance of [[modelClass]], instead of
+ * using Yii::$app->getDb(). If in some cases, the emails are stored in another database than the primary one,
+ * people just need to override the getDb() method of the [[modelClass]].
+ *
+ * One special case is that the "installerMode": As the modelClass, which extends [[\yii\db\ActiveRecord]], is
+ * generated while installing this extension. We cannot return a db connection from a model class that doesn't
+ * exist. So we use the attribute [[\thinkerg\HermesMailing\installer\Migration::db]] to get the db connection,
+ * and that attribute configurable during the installation, and its default value is the 'db' component
+ * of Yii::$app. If migration's [[db]] component is customized, the getDb() method of the generated AR model
+ * will have to be overridden, to connect to the db in which the data table is created.
  *
  * @since v1.0.0
  * @author Thinker_g

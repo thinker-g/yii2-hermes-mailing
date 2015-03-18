@@ -1,8 +1,8 @@
 {
     "name": "thinker-g/yii2-hermes-mailing",
-    "description": "Multi-process emailing suite (module, command) for yii2.0.",
+    "description": "Multi-process emailing solution for yii2.0. (Email queue based)",
     "type": "yii2-extension",
-    "keywords": ["yii2","extension","multi-process","emailing"],
+    "keywords": ["yii2","distributed","multi-process","emailing"],
     "license": "MIT",
     "authors": [
         {
@@ -11,7 +11,8 @@
         }
     ],
     "require": {
-        "yiisoft/yii2": "*"
+        "yiisoft/yii2": "*",
+        "yiisoft/yii2-swiftmailer": "*"
     },
     "autoload": {
         "psr-4": {
