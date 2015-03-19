@@ -16,32 +16,27 @@ use Yii;
 class Fill4TestAction extends InstallerAction
 {
 
-    public $insertQuantity = 10000;
-
-    public $from = "from_{seq}@example.com";
-
-    public $to = "to_{seq}@example.com";
-
     public $barLen = 70;
 
     /**
      * Run to insert a certain number of test email entries.
-     * Number can be set by attribute $insertQuantity.
-     *
-     * @return number
+     * @param int $insertCount Number of emails to insert.
+     * @param string $from From address where the token "{seq}" will be replaced by the sequence number.
+     * @param string $to To address where the token "{seq}" will be replaced by the sequence number.
+     * @return int
      */
-    public function run()
+    public function run($insertCount = 1000, $from = "from_{seq}@example.com", $to = "to_{seq}@example.com")
     {
         $trans = $this->migration->db->beginTransaction();
         try {
             $this->migration->db->createCommand('set autocommit=0;')->execute();
-            for ($i = 0; $i < $this->insertQuantity; $i++) {
+            for ($i = 0; $i < $insertCount; $i++) {
                 $this->controller->stdout("\r");
                 $this->addTestEmail(
-                    str_replace('{seq}', $i, $this->from),
-                    str_replace('{seq}', $i, $this->to)
+                    str_replace('{seq}', $i, $from),
+                    str_replace('{seq}', $i, $to)
                 );
-                $percent = $i / $this->insertQuantity;
+                $percent = $i / $insertCount;
 
                 $bar = str_pad('', (int)($this->barLen * $percent), '=', STR_PAD_LEFT);
                 $bar = str_pad ($bar, $this->barLen, ' ', STR_PAD_RIGHT);
@@ -50,11 +45,11 @@ class Fill4TestAction extends InstallerAction
                 $this->controller->stdout($bar, Console::FG_BLUE);
             }
             $trans->commit();
-            $this->controller->stderr("$i mails inserted.\n", Console::FG_GREEN);
+            $this->controller->stderr("\n$i mails inserted.\n", Console::FG_GREEN);
         } catch (Exception $e) {
             $trans->rollBack();
-            throw $e;
             $this->controller->stderr("Some errors happened.\n", Console::FG_RED);
+            $this->controller->stderr($e->getMessage() . PHP_EOL, Console::FG_RED);
         }
 
         return 0;
