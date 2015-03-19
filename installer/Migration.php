@@ -23,11 +23,12 @@ class Migration extends YiiMigration
 
     public $columns = [
         'id' => 'int primary key auto_increment',
-        'to' => 'varchar(50)',
         'from' => 'varchar(50)',
-        'from_name' => 'varchar(50)',
+        'to' => 'varchar(50)',
+        'cc' => 'varchar(50)',
+        'bcc' => 'varchar(50)',
         'reply_to' => 'varchar(50)',
-        'is_html' => 'bool default true',
+        'from_name' => 'varchar(50)',
         'subject' => 'varchar(100)',
         'body' => 'text',
         'created' => 'timestamp default current_timestamp',

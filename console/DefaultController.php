@@ -133,14 +133,13 @@ class DefaultController extends Controller
      * @var array
      */
     public $attrMap = [
-        'charset' => 'charset',
         'from' => 'from',
         'to' => 'to',
-        'reply_to' => 'replyTo',
         'cc' => 'cc',
         'bcc' => 'bcc',
+        'reply_to' => 'replyTo',
         'subject' => 'subject',
-        'html_body' => 'htmlBody'
+        'body' => 'htmlBody'
     ];
 
     /**
@@ -417,9 +416,7 @@ class DefaultController extends Controller
         $message = $this->getMailer()->compose();
         $this->trigger(self::EVENT_BEFORE_COMPOSE_MSG, new MailEvent(['message' => $message]));
         foreach ($this->attrMap as $arAttr => $msgAttr) {
-            if (isset($mail->attributes[$arAttr])) {
-                $message->{$msgAttr} = $mail->{$arAttr};
-            }
+            $message->{$msgAttr} = $mail->{$arAttr};
         }
         return $message;
     }
