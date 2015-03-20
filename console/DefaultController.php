@@ -16,29 +16,7 @@ use yii\base\Exception;
 use yii\mail\MailEvent;
 
 /**
- * Hermes Mailing's main command controller.
- * When this starts up, it will firstly call [[signMails()]] to update signature column of the table
- * specified by [[modelClass]]. Each process has a unique sigature, so once a mail entry is signed by one
- * process it won't be taken by any other process. Then we can startup mailer processes parallely. 
- * The number of entries signed each time is specified by option [[signSize]].
- *
- * After the signing, the process will then fetch its signed mails in chunk, the number fetched each time
- * is specified by the option [[pageSize]], this parameter is use to controller the memory usage
- * of a single process.
- *
- * After a chunk of mail is fetched from database, it will call the "mailer" component to send them one by one.
- *
- * For better extendability, the DB connection is returned from the instance of [[modelClass]], instead of
- * using Yii::$app->getDb(). If in some cases, the emails are stored in another database than the primary one,
- * people just need to override the getDb() method of the [[modelClass]].
- *
- * One special case is that the "installerMode": As the modelClass, which extends [[\yii\db\ActiveRecord]], is
- * generated while installing this extension. We cannot return a db connection from a model class that doesn't
- * exist. So we use the attribute [[\thinkerg\HermesMailing\installer\Migration::db]] to get the db connection,
- * and that attribute configurable during the installation, and its default value is the 'db' component
- * of Yii::$app. If migration's [[db]] component is customized, the getDb() method of the generated AR model
- * will have to be overridden, to connect to the db in which the data table is created.
- *
+ * Hermes Mailing's core sending command. Hermes Mailing is a highly configurable multi-process emailing solution based on yii2.0 framework. 
  * @since v1.0.0
  * @author Thinker_g
  *
@@ -46,6 +24,30 @@ use yii\mail\MailEvent;
  */
 class DefaultController extends Controller
 {
+    /*
+     * When this starts up, it will firstly call [[signMails()]] to update signature column of the table
+     * specified by [[modelClass]]. Each process has a unique sigature, so once a mail entry is signed by one
+     * process it won't be taken by any other process. Then we can startup mailer processes parallely.
+     * The number of entries signed each time is specified by option [[signSize]].
+     *
+     * After the signing, the process will then fetch its signed mails in chunk, the number fetched each time
+     * is specified by the option [[pageSize]], this parameter is use to controller the memory usage
+     * of a single process.
+     *
+     * After a chunk of mail is fetched from database, it will call the "mailer" component to send them one by one.
+     *
+     * For better extendability, the DB connection is returned from the instance of [[modelClass]], instead of
+     * using Yii::$app->getDb(). If in some cases, the emails are stored in another database than the primary one,
+     * people just need to override the getDb() method of the [[modelClass]].
+     *
+     * One special case is that the "installerMode": As the modelClass, which extends [[\yii\db\ActiveRecord]], is
+     * generated while installing this extension. We cannot return a db connection from a model class that doesn't
+     * exist. So we use the attribute [[\thinkerg\HermesMailing\installer\Migration::db]] to get the db connection,
+     * and that attribute configurable during the installation, and its default value is the 'db' component
+     * of Yii::$app. If migration's [[db]] component is customized, the getDb() method of the generated AR model
+     * will have to be overridden, to connect to the db in which the data table is created.
+     *
+     */
 
     /**
      * Event triggered before compose mail message.
