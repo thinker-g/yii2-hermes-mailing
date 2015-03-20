@@ -1,6 +1,6 @@
 # Hermes Emailing [v1.0.0]
 
-Multi-process emailing suite (module, command) for yii2.0.
+Highly configurable multi-process emailing solution (console command) for yii2.0.
 
 ## Installation
 
