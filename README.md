@@ -90,14 +90,14 @@ Migrating database...
 Running 'Model Generator'...
 
 The following files will be generated:
-        [new] /home/tlsadmin/ws/advanced/common/models/HermesMail.php
+        [new] /home/admin/ws/advanced/common/models/HermesMail.php
 
 Ready to generate the selected files? (yes|no) [yes]:y
 
 Files were generated successfully!
-Generating code using template "/home/tlsadmin/ws/advanced/vendor/yiisoft/yii2-gii/generators/
+Generating code using template "/home/admin/ws/advanced/vendor/yiisoft/yii2-gii/generators/
 model/default"...
- generated /home/tlsadmin/ws/advanced/common/models/HermesMail.php
+ generated /home/admin/ws/advanced/common/models/HermesMail.php
 done!
 
 Install complete!

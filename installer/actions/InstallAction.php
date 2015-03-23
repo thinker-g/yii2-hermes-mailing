@@ -14,7 +14,7 @@ use yii\db\Exception as DbException;
 use Yii;
 
 /**
- * @author tlsadmin
+ * @author Thinker_g
  *
  * @property \thinkerg\HermesMailing\console\DefaultController $controller
  */

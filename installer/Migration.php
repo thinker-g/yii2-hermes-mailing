@@ -13,7 +13,7 @@ use Yii;
 
 /**
  *
- * @author tlsadmin
+ * @author Thinker_g
  * @property string $tableName
  */
 class Migration extends YiiMigration
