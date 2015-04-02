@@ -46,7 +46,8 @@ class InstallAction extends InstallerAction
         $params = [
             'tableName' => $migration->tableName,
             'modelClass' => $modelClass,
-            'ns' => $ns
+            'ns' => $ns,
+            'useTablePrefix' => true
         ];
         Yii::$app->set('db', $migration->db);
         Yii::$app->runAction("/{$this->giiID}/model", $params);
