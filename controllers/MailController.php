@@ -8,6 +8,7 @@ use common\models\HermesMailSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\data\ActiveDataProvider;
 
 /**
  * MailController implements the CRUD actions for HermesMail model.
@@ -33,8 +34,12 @@ class MailController extends Controller
      */
     public function actionIndex()
     {
-        $searchModel = new HermesMailSearch();
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        $searchModel = Yii::createObject($this->module->modelClass);
+        $query = $searchModel->find();
+        $dataProvider = new ActiveDataProvider([
+            'query' => $query,
+            'pagination' => ['pageSize' => 10]
+        ]);
 
         return $this->render('index', [
             'searchModel' => $searchModel,
