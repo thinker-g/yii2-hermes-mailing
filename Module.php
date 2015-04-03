@@ -39,6 +39,12 @@ class Module extends \yii\base\Module implements BootstrapInterface
     public $modelClass = 'app\\models\\HermesMail';
     
     /**
+     * Search model class, if this is left empty, class name of $modelClass will be used.
+     * @var string
+     */
+    public $searchModelClass;
+
+    /**
      * @override
      * @param \yii\base\Application $app
      */
@@ -54,6 +60,17 @@ class Module extends \yii\base\Module implements BootstrapInterface
         }
     }
 
+    public function init()
+    {
+        parent::init();
+        if (is_null($this->searchModelClass)) {
+            if (is_array($this->modelClass)) {
+                $this->searchModelClass = $this->modelClass['class'];
+            } else {
+                $this->searchModelClass = $this->modelClass;
+            }
+        }
+    }
 
 
      

@@ -9,6 +9,8 @@ use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\data\ActiveDataProvider;
+use yii\helpers\Html;
+use yii\db\ActiveRecord;
 
 /**
  * MailController implements the CRUD actions for HermesMail model.
@@ -34,12 +36,19 @@ class MailController extends Controller
      */
     public function actionIndex()
     {
-        $searchModel = Yii::createObject($this->module->modelClass);
-        $query = $searchModel->find();
+        $searchModel = Yii::createObject($this->module->searchModelClass);
+
         $dataProvider = new ActiveDataProvider([
-            'query' => $query,
+            'query' => $searchModel->find(),
             'pagination' => ['pageSize' => 10]
         ]);
+
+        $searchModel->load(Yii::$app->request->queryParams);
+        if ($searchModel->validate()) {
+            foreach ($searchModel->attributes as $key => $value) {
+                $dataProvider->query->andFilterWhere(['like', $key, $value]);
+            }
+        }
 
         return $this->render('index', [
             'searchModel' => $searchModel,
@@ -118,7 +127,8 @@ class MailController extends Controller
      */
     protected function findModel($id)
     {
-        if (($model = HermesMail::findOne($id)) !== null) {
+        $modelClass = $this->module->modelClass;
+        if (($model = $modelClass::findOne($id)) !== null) {
             return $model;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');
