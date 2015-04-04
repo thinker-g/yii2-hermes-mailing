@@ -10,6 +10,8 @@ namespace thinkerg\HermesMailing;
 
 use Yii;
 use yii\base\BootstrapInterface;
+use yii\helpers\ArrayHelper;
+use yii\filters\AccessControl;
 
 class Module extends \yii\base\Module implements BootstrapInterface
 {
@@ -37,7 +39,7 @@ class Module extends \yii\base\Module implements BootstrapInterface
      * @var string
      */
     public $modelClass = 'app\\models\\HermesMail';
-    
+
     /**
      * Search model class, if this is left empty, class name of $modelClass will be used.
      * @var string
@@ -45,16 +47,24 @@ class Module extends \yii\base\Module implements BootstrapInterface
     public $searchModelClass;
 
     /**
+     * Allow only listed roles to access this module.
+     * Defaultly allow all authenticated users to access, leave it null or false to let
+     * all user access, including unauthenticated users.
+     * @var array
+     */
+    public $roles = ['@'];
+
+    /**
      * @override
      * @param \yii\base\Application $app
      */
     public function bootstrap($app)
     {
-        
+
         if ($app instanceof \yii\web\Application) {
 
         } elseif ($app instanceof \yii\base\Application) {
-            
+
         } else {
             $this->trigger(static::EVENT_UNKNOWN_APP);
         }
@@ -72,8 +82,28 @@ class Module extends \yii\base\Module implements BootstrapInterface
         }
     }
 
+    /* (non-PHPdoc)
+     * @see \yii\base\Component::behaviors()
+     */
+    public function behaviors()
+    {
+        return ArrayHelper::merge(parent::behaviors(), [
+            'access' => [
+                'class' => AccessControl::className(),
+                'rules' => [
+                    [
+                        'allow' => true,
+                        'roles' => $this->roles
+                    ]
+                ]
+            ]
+        ]);
 
-     
+    }
+
+
+
+
 }
 
 ?>

@@ -37,6 +37,7 @@ return [
     'statusAttr' => 'status',
     'retryAttr' => 'retry_times',
     'assignedToSvrAttr' => 'assigned_to_svr',
+    'roles' => ['@'],
     
     'attrMap' => [
         'charset' => 'charset',
