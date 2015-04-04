@@ -50,7 +50,7 @@ class MailController extends Controller
             }
         }
 
-        return $this->render('index', [
+        return $this->render($this->module->indexView, [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
         ]);
@@ -63,7 +63,7 @@ class MailController extends Controller
      */
     public function actionView($id)
     {
-        return $this->render('view', [
+        return $this->render($this->module->viewView, [
             'model' => $this->findModel($id),
         ]);
     }
@@ -80,7 +80,7 @@ class MailController extends Controller
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
         } else {
-            return $this->render('create', [
+            return $this->render($this->module->createView, [
                 'model' => $model,
             ]);
         }
@@ -99,7 +99,7 @@ class MailController extends Controller
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
         } else {
-            return $this->render('update', [
+            return $this->render($this->module->updateView, [
                 'model' => $model,
             ]);
         }

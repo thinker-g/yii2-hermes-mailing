@@ -18,17 +18,10 @@ class Module extends \yii\base\Module implements BootstrapInterface
 
     const EVENT_UNKNOWN_APP = 'hermesUnknownApp';
 
-
-
     /**
      * @inheritdoc
      */
     public $controllerNamespace = 'thinkerg\HermesMailing\controllers';
-
-    /**
-     * @inheritdoc
-     */
-    public $defaultRoute = 'mail/index';
 
     /**
      * Email AR model name.
@@ -53,6 +46,34 @@ class Module extends \yii\base\Module implements BootstrapInterface
      * @var array
      */
     public $roles = ['@'];
+
+    /**
+     * View id used for index Action.
+     * Will be passed to render() method of the controller.
+     * @var string
+     */
+    public $indexView = 'index';
+
+    /**
+     * View id used for view Action.
+     * Will be passed to render() method of the controller.
+     * @var string
+     */
+    public $createView = 'create';
+
+    /**
+     * View id used for update Action.
+     * Will be passed to render() method of the controller.
+     * @var string
+     */
+    public $updateView = 'update';
+
+    /**
+     * View id used for view Action.
+     * Will be passed to render() method of the controller.
+     * @var string
+     */
+    public $viewView = 'view';
 
     /**
      * @override
