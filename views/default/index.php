@@ -1,12 +1,14 @@
+<?php
+use yii\helpers\Html;
+
+/* @var $this yii\web\View */
+
+$this->title = Yii::t('app', 'Hermes Mailing Management');
+$this->params['breadcrumbs'][] = $this->title;
+
+?>
 <div class="hermes-default-index">
-    <h1><?= $this->context->action->uniqueId ?></h1>
-    <p>
-        This is the view content for action "<?= $this->context->action->id ?>".
-        The action belongs to the controller "<?= get_class($this->context) ?>"
-        in the "<?= $this->context->module->id ?>" module.
-    </p>
-    <p>
-        You may customize this page by editing the following file:<br>
-        <code><?= __FILE__ ?></code>
-    </p>
+    <h1><?= $this->title ?></h1>
+    <p>This is a web module provides a human-friendly management inteface for Hermes Mailing Command.</p>
+    <div><?= Html::a(Yii::t('app', 'Go manage emails'), ['mail/index'], ['class' => 'btn btn-primary']);?></div>
 </div>

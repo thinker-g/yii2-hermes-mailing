@@ -8,6 +8,7 @@ use yii\grid\GridView;
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
 $this->title = Yii::t('app', 'Hermes Mails');
+$this->params['breadcrumbs'][] = ['label' => 'Splash Page', 'url'=>['/' . $this->context->module->uniqueID]];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="hermes-mail-index">
