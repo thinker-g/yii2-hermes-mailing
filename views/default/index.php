@@ -3,7 +3,7 @@ use yii\helpers\Html;
 
 /* @var $this yii\web\View */
 
-$this->title = Yii::t('app', 'Hermes Mailing Management');
+$this->title = Yii::t('app', 'Hermes Mailing');
 $this->params['breadcrumbs'][] = $this->title;
 
 ?>

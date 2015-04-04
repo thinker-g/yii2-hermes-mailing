@@ -8,7 +8,7 @@ use yii\helpers\Html;
 $this->title = Yii::t('app', 'Update {modelClass}: ', [
     'modelClass' => 'Hermes Mail',
 ]) . ' ' . $model->id;
-$this->params['breadcrumbs'][] = ['label' => 'Splash Page', 'url'=>['/' . $this->context->module->uniqueID]];
+$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Hermes Mailing'), 'url'=>['/' . $this->context->module->uniqueID]];
 $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Hermes Mails'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = ['label' => $model->id, 'url' => ['view', 'id' => $model->id]];
 $this->params['breadcrumbs'][] = Yii::t('app', 'Update');

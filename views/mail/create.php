@@ -7,7 +7,7 @@ use yii\helpers\Html;
 /* @var $model common\models\HermesMail */
 
 $this->title = Yii::t('app', 'Create Hermes Mail');
-$this->params['breadcrumbs'][] = ['label' => 'Splash Page', 'url'=>['/' . $this->context->module->uniqueID]];
+$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Hermes Mailing'), 'url'=>['/' . $this->context->module->uniqueID]];
 $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Hermes Mails'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>

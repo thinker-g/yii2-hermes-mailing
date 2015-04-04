@@ -7,7 +7,7 @@ use yii\widgets\DetailView;
 /* @var $model common\models\HermesMail */
 
 $this->title = $model->id;
-$this->params['breadcrumbs'][] = ['label' => 'Splash Page', 'url'=>['/' . $this->context->module->uniqueID]];
+$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Hermes Mailing'), 'url'=>['/' . $this->context->module->uniqueID]];
 $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Hermes Mails'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
