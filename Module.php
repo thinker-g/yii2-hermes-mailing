@@ -1,12 +1,12 @@
 <?php
 /**
  * @link https://github.com/thinker-g/yii2-hermes-mailing
- * @copyright Copyright (c) thinkergpsr4 (Jiyan.guo@gmail.com)
+ * @copyright Copyright (c) thinker_g (Jiyan.guo@gmail.com)
  * @license MIT
  * @version v1.0.0
- * @author thinkergpsr4
+ * @author thinker_g
  */
-namespace thinkergpsr4\HermesMailing;
+namespace thinker_g\HermesMailing;
 
 use Yii;
 use yii\base\BootstrapInterface;
@@ -21,7 +21,7 @@ class Module extends \yii\base\Module implements BootstrapInterface
     /**
      * @inheritdoc
      */
-    public $controllerNamespace = 'thinkergpsr4\HermesMailing\controllers';
+    public $controllerNamespace = 'thinker_g\HermesMailing\controllers';
 
     /**
      * Email AR model name.

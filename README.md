@@ -23,7 +23,7 @@ or add
 to the require section of your `composer.json` file.
 
 You could also download a copy directly from the [GitHub project page](http://github.com/thinker-g/yii2-hermes-mailing).
-If you do in this way, you'll be needing to setup the directory of alias `@thinkergpsr4/HermesMailing`. Here's an example.
+If you do in this way, you'll be needing to setup the directory of alias `@thinker_g/HermesMailing`. Here's an example.
 
 In config/main.php, assume that you put `yii2-hermes-mailing` folder in `extensions/` of your project:
 
@@ -32,7 +32,7 @@ return [
     'id' => 'app-console',
     ...
     'aliases' => [
-        '@thinkergpsr4/HermesMailing' => '@app/extensions/yii2-hermes-mailing',
+        '@thinker_g/HermesMailing' => '@app/extensions/yii2-hermes-mailing',
         ...
     ],
     ...
@@ -52,7 +52,7 @@ return [
     ...
     'controllerMap' => [
         'email' => [
-            'class' => 'thinkergpsr4\HermesMailing\console\DefaultController',
+            'class' => 'thinker_g\HermesMailing\console\DefaultController',
             'modelClass' => 'common\models\HermesMail',
             'installerMode' => true,
             'testMode' => true

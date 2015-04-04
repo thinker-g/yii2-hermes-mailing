@@ -16,7 +16,7 @@
     },
     "autoload": {
         "psr-4": {
-            "thinkergpsr4\\HermesMailing\\": ""
+            "thinker_g\\HermesMailing\\": ""
         }
     }
 }
