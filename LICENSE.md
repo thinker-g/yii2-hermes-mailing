@@ -1,6 +1,6 @@
 The MIT License (MIT)
 
-Copyright (c) 2014 Thinker_g (Jiyan.guo@gmail.com)
+Copyright (c) 2014 thinkergpsr4 (Jiyan.guo@gmail.com)
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal

@@ -1,19 +1,19 @@
 <?php
 /**
  * @link https://github.com/thinker-g/yii2-hermes-mailing
- * @copyright Copyright (c) Thinker_g (Jiyan.guo@gmail.com)
+ * @copyright Copyright (c) thinkergpsr4 (Jiyan.guo@gmail.com)
  * @license MIT
  * @version v1.0.0
- * @author Thinker_g
+ * @author thinkergpsr4
  */
-namespace thinker_g\HermesMailing\installer;
+namespace thinkergpsr4\HermesMailing\installer;
 
 use yii\db\Migration as YiiMigration;
 use Yii;
 
 /**
  *
- * @author Thinker_g
+ * @author thinkergpsr4
  * @property string $tableName
  */
 class Migration extends YiiMigration

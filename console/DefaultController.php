@@ -1,13 +1,13 @@
 <?php
 /**
  * @link https://github.com/thinker-g/yii2-hermes-mailing
- * @copyright Copyright (c) Thinker_g (Jiyan.guo@gmail.com)
+ * @copyright Copyright (c) thinkergpsr4 (Jiyan.guo@gmail.com)
  * @license MIT
  * @version v1.0.0
- * @author Thinker_g
+ * @author thinkergpsr4
  */
 
-namespace thinker_g\HermesMailing\console;
+namespace thinkergpsr4\HermesMailing\console;
 
 use Yii;
 use yii\console\Controller;
@@ -18,7 +18,7 @@ use yii\mail\MailEvent;
 /**
  * Hermes Mailing's core sending command. Hermes Mailing is a highly configurable multi-process emailing solution based on yii2.0 framework. 
  * @since v1.0.0
- * @author Thinker_g
+ * @author thinkergpsr4
  *
  * @property \yii\db\ActiveRecord $fetchedMail The mail AR retrieved from database and to be sent.
  */
@@ -42,7 +42,7 @@ class DefaultController extends Controller
      *
      * One special case is that the "installerMode": As the modelClass, which extends [[\yii\db\ActiveRecord]], is
      * generated while installing this extension. We cannot return a db connection from a model class that doesn't
-     * exist. So we use the attribute [[\thinker_g\HermesMailing\installer\Migration::db]] to get the db connection,
+     * exist. So we use the attribute [[\thinkergpsr4\HermesMailing\installer\Migration::db]] to get the db connection,
      * and that attribute configurable during the installation, and its default value is the 'db' component
      * of Yii::$app. If migration's [[db]] component is customized, the getDb() method of the generated AR model
      * will have to be overridden, to connect to the db in which the data table is created.
@@ -151,7 +151,7 @@ class DefaultController extends Controller
      * And default "sentByAttr" is "sent_by".
      * @var string|array
      */
-    public $sentByBehavior = 'thinker_g\HermesMailing\components\SentByBehavior';
+    public $sentByBehavior = 'thinkergpsr4\HermesMailing\components\SentByBehavior';
 
     /******************** Begin command options *******************/
 
@@ -299,10 +299,10 @@ class DefaultController extends Controller
     public $installerMode = false;
 
     public $installerActions = [
-        'install' => 'thinker_g\HermesMailing\installer\actions\InstallAction',
-        'uninstall' => 'thinker_g\HermesMailing\installer\actions\UninstallAction',
-        'fill4test' => 'thinker_g\HermesMailing\installer\actions\Fill4TestAction',
-        'determine-anti-spams' => 'thinker_g\HermesMailing\installer\actions\DetermineAntiSpamsAction'
+        'install' => 'thinkergpsr4\HermesMailing\installer\actions\InstallAction',
+        'uninstall' => 'thinkergpsr4\HermesMailing\installer\actions\UninstallAction',
+        'fill4test' => 'thinkergpsr4\HermesMailing\installer\actions\Fill4TestAction',
+        'determine-anti-spams' => 'thinkergpsr4\HermesMailing\installer\actions\DetermineAntiSpamsAction'
     ];
 
     /**

@@ -5,10 +5,10 @@
  * You should not setup that option, and the following value will be assigned internally.
  *
  * @link http://github.com/thinker-g/yii2-hermes-mailing
- * @copyright Copyright (c) Thinker_g (Jiyan.guo@gmail.com)
+ * @copyright Copyright (c) thinkergpsr4 (Jiyan.guo@gmail.com)
  * @license MIT
  * @version v1.0.0
- * @author Thinker_g
+ * @author thinkergpsr4
  * 
  */
 
@@ -31,7 +31,7 @@
  ================== crontab setting ==================
  */
 return [
-    'class' => 'thinker_g\HermesMailing\console\DefaultController',
+    'class' => 'thinkergpsr4\HermesMailing\console\DefaultController',
     'modelClass' => 'app\models\HermesMail',
     'signatureAttr' => 'signature',
     'statusAttr' => 'status',
@@ -48,7 +48,7 @@ return [
         'subject' => 'subject',
         'html_body' => 'htmlBody'
     ],
-    'sentByBehavior' => 'thinker_g\HermesMailing\components\SentByBehavior',
+    'sentByBehavior' => 'thinkergpsr4\HermesMailing\components\SentByBehavior',
     
     'mailer' => 'mailer',
     'testMode' => false,
@@ -67,9 +67,9 @@ return [
     
     'installerMode' => false,
     'installerActions' => [
-        'install' => 'thinker_g\HermesMailing\installer\actions\InstallAction',
-        'uninstall' => 'thinker_g\HermesMailing\installer\actions\UninstallAction',
-        'fill4test' => 'thinker_g\HermesMailing\installer\actions\Fill4TestAction',
-        'determine-anti-spams' => 'thinker_g\HermesMailing\installer\actions\DetermineAntiSpamsAction'
+        'install' => 'thinkergpsr4\HermesMailing\installer\actions\InstallAction',
+        'uninstall' => 'thinkergpsr4\HermesMailing\installer\actions\UninstallAction',
+        'fill4test' => 'thinkergpsr4\HermesMailing\installer\actions\Fill4TestAction',
+        'determine-anti-spams' => 'thinkergpsr4\HermesMailing\installer\actions\DetermineAntiSpamsAction'
     ]
 ];

@@ -1,20 +1,20 @@
 <?php
 /**
  * @link https://github.com/thinker-g/yii2-hermes-mailing
- * @copyright Copyright (c) Thinker_g (Jiyan.guo@gmail.com)
+ * @copyright Copyright (c) thinkergpsr4 (Jiyan.guo@gmail.com)
  * @license MIT
  * @version v1.0.0
- * @author Thinker_g
+ * @author thinkergpsr4
  */
 
-namespace thinker_g\HermesMailing\installer\actions;
+namespace thinkergpsr4\HermesMailing\installer\actions;
 
 use yii\base\Action;
 use Yii;
 
 class InstallerAction extends Action
 {
-    public $migration = 'thinker_g\HermesMailing\installer\Migration';
+    public $migration = 'thinkergpsr4\HermesMailing\installer\Migration';
     public $giiID = 'gii';
 
     public function init()
