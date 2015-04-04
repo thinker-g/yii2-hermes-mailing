@@ -6,7 +6,7 @@
  * @version v1.0.0
  * @author Thinker_g
  */
-namespace thinkerg\HermesMailing\installer;
+namespace thinker_g\HermesMailing\installer;
 
 use yii\db\Migration as YiiMigration;
 use Yii;

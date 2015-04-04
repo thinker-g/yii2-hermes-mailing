@@ -7,14 +7,14 @@
  * @author Thinker_g
  */
 
-namespace thinkerg\HermesMailing\installer\actions;
+namespace thinker_g\HermesMailing\installer\actions;
 
 use yii\base\Action;
 use Yii;
 
 class InstallerAction extends Action
 {
-    public $migration = 'thinkerg\HermesMailing\installer\Migration';
+    public $migration = 'thinker_g\HermesMailing\installer\Migration';
     public $giiID = 'gii';
 
     public function init()

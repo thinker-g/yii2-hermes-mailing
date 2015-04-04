@@ -7,7 +7,7 @@
  * @author Thinker_g
  */
 
-namespace thinkerg\HermesMailing\components;
+namespace thinker_g\HermesMailing\components;
 
 use yii\base\Behavior;
 use yii\db\BaseActiveRecord;

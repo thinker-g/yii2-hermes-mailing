@@ -1,6 +1,6 @@
 <?php
 
-namespace thinkerg\HermesMailing\controllers;
+namespace thinker_g\HermesMailing\controllers;
 
 use Yii;
 use common\models\HermesMail;
@@ -14,7 +14,7 @@ use yii\db\ActiveRecord;
 
 /**
  * MailController implements the CRUD actions for HermesMail model.
- * @property \thinkerg\HermesMailing\Module $module
+ * @property \thinker_g\HermesMailing\Module $module
  */
 class MailController extends Controller
 {

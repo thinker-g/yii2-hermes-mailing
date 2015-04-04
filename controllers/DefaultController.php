@@ -7,7 +7,7 @@
  * @author Thinker_g
  */
 
-namespace thinkerg\HermesMailing\controllers;
+namespace thinker_g\HermesMailing\controllers;
 
 use yii\web\Controller;
 

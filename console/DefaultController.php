@@ -7,7 +7,7 @@
  * @author Thinker_g
  */
 
-namespace thinkerg\HermesMailing\console;
+namespace thinker_g\HermesMailing\console;
 
 use Yii;
 use yii\console\Controller;
@@ -42,7 +42,7 @@ class DefaultController extends Controller
      *
      * One special case is that the "installerMode": As the modelClass, which extends [[\yii\db\ActiveRecord]], is
      * generated while installing this extension. We cannot return a db connection from a model class that doesn't
-     * exist. So we use the attribute [[\thinkerg\HermesMailing\installer\Migration::db]] to get the db connection,
+     * exist. So we use the attribute [[\thinker_g\HermesMailing\installer\Migration::db]] to get the db connection,
      * and that attribute configurable during the installation, and its default value is the 'db' component
      * of Yii::$app. If migration's [[db]] component is customized, the getDb() method of the generated AR model
      * will have to be overridden, to connect to the db in which the data table is created.
@@ -151,7 +151,7 @@ class DefaultController extends Controller
      * And default "sentByAttr" is "sent_by".
      * @var string|array
      */
-    public $sentByBehavior = 'thinkerg\HermesMailing\components\SentByBehavior';
+    public $sentByBehavior = 'thinker_g\HermesMailing\components\SentByBehavior';
 
     /******************** Begin command options *******************/
 
@@ -299,10 +299,10 @@ class DefaultController extends Controller
     public $installerMode = false;
 
     public $installerActions = [
-        'install' => 'thinkerg\HermesMailing\installer\actions\InstallAction',
-        'uninstall' => 'thinkerg\HermesMailing\installer\actions\UninstallAction',
-        'fill4test' => 'thinkerg\HermesMailing\installer\actions\Fill4TestAction',
-        'determine-anti-spams' => 'thinkerg\HermesMailing\installer\actions\DetermineAntiSpamsAction'
+        'install' => 'thinker_g\HermesMailing\installer\actions\InstallAction',
+        'uninstall' => 'thinker_g\HermesMailing\installer\actions\UninstallAction',
+        'fill4test' => 'thinker_g\HermesMailing\installer\actions\Fill4TestAction',
+        'determine-anti-spams' => 'thinker_g\HermesMailing\installer\actions\DetermineAntiSpamsAction'
     ];
 
     /**

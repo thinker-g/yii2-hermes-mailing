@@ -6,7 +6,7 @@
  * @version v1.0.0
  * @author Thinker_g
  */
-namespace thinkerg\HermesMailing\installer\actions;
+namespace thinker_g\HermesMailing\installer\actions;
 
 use yii\helpers\Console;
 use Yii;

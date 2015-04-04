@@ -6,7 +6,7 @@
  * @version v1.0.0
  * @author Thinker_g
  */
-namespace thinkerg\HermesMailing;
+namespace thinker_g\HermesMailing;
 
 use Yii;
 use yii\base\BootstrapInterface;
@@ -21,7 +21,7 @@ class Module extends \yii\base\Module implements BootstrapInterface
     /**
      * @inheritdoc
      */
-    public $controllerNamespace = 'thinkerg\HermesMailing\controllers';
+    public $controllerNamespace = 'thinker_g\HermesMailing\controllers';
 
     /**
      * Email AR model name.

@@ -7,7 +7,7 @@
  * @author Thinker_g
  */
 
-namespace thinkerg\HermesMailing\installer\actions;
+namespace thinker_g\HermesMailing\installer\actions;
 
 use Yii;
 

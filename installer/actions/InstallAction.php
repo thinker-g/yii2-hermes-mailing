@@ -7,7 +7,7 @@
  * @author Thinker_g
  */
 
-namespace thinkerg\HermesMailing\installer\actions;
+namespace thinker_g\HermesMailing\installer\actions;
 
 use yii\helpers\Console;
 use yii\db\Exception as DbException;
@@ -16,7 +16,7 @@ use Yii;
 /**
  * @author Thinker_g
  *
- * @property \thinkerg\HermesMailing\console\DefaultController $controller
+ * @property \thinker_g\HermesMailing\console\DefaultController $controller
  */
 class InstallAction extends InstallerAction
 {

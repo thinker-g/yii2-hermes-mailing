@@ -31,7 +31,7 @@
  ================== crontab setting ==================
  */
 return [
-    'class' => 'thinkerg\HermesMailing\console\DefaultController',
+    'class' => 'thinker_g\HermesMailing\console\DefaultController',
     'modelClass' => 'app\models\HermesMail',
     'signatureAttr' => 'signature',
     'statusAttr' => 'status',
@@ -48,7 +48,7 @@ return [
         'subject' => 'subject',
         'html_body' => 'htmlBody'
     ],
-    'sentByBehavior' => 'thinkerg\HermesMailing\components\SentByBehavior',
+    'sentByBehavior' => 'thinker_g\HermesMailing\components\SentByBehavior',
     
     'mailer' => 'mailer',
     'testMode' => false,
@@ -67,9 +67,9 @@ return [
     
     'installerMode' => false,
     'installerActions' => [
-        'install' => 'thinkerg\HermesMailing\installer\actions\InstallAction',
-        'uninstall' => 'thinkerg\HermesMailing\installer\actions\UninstallAction',
-        'fill4test' => 'thinkerg\HermesMailing\installer\actions\Fill4TestAction',
-        'determine-anti-spams' => 'thinkerg\HermesMailing\installer\actions\DetermineAntiSpamsAction'
+        'install' => 'thinker_g\HermesMailing\installer\actions\InstallAction',
+        'uninstall' => 'thinker_g\HermesMailing\installer\actions\UninstallAction',
+        'fill4test' => 'thinker_g\HermesMailing\installer\actions\Fill4TestAction',
+        'determine-anti-spams' => 'thinker_g\HermesMailing\installer\actions\DetermineAntiSpamsAction'
     ]
 ];
