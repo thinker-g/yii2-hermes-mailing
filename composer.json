@@ -12,7 +12,8 @@
     ],
     "require": {
         "yiisoft/yii2": "*",
-        "yiisoft/yii2-swiftmailer": "*"
+        "yiisoft/yii2-swiftmailer": "*",
+        "thinker-g/yii2-helpers": "dev-master"
     },
     "autoload": {
         "psr-4": {
