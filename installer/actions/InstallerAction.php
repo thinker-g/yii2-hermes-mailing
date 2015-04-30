@@ -10,6 +10,7 @@
 namespace thinker_g\HermesMailing\installer\actions;
 
 use yii\base\Action;
+use yii\helpers\Console;
 use Yii;
 
 class InstallerAction extends Action

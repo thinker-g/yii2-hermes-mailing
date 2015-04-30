@@ -3,14 +3,10 @@
 namespace thinker_g\HermesMailing\controllers;
 
 use Yii;
-use common\models\HermesMail;
-use common\models\HermesMailSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\data\ActiveDataProvider;
-use yii\helpers\Html;
-use yii\db\ActiveRecord;
 
 /**
  * MailController implements the CRUD actions for HermesMail model.
