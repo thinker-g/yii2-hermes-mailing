@@ -101,6 +101,11 @@ class Module extends \yii\base\Module implements BootstrapInterface
                 $this->searchModelClass = $this->modelClass;
             }
         }
+        Yii::$app->getView()->params['sidebarMenu'] = [
+            ['label' => 'Splash page', 'url' => ['default/index']],
+            ['label' => 'View queue', 'url' => ['mail/index']],
+            ['label' => 'New mail', 'url' => ['mail/create']],
+        ];
     }
 
     /* (non-PHPdoc)
