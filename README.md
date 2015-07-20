@@ -175,7 +175,7 @@ user@localhost:~/ws/advanced$ ./yii email/send-queue
 user@localhost:~/ws/advanced$
 ```
 
-If you are seeing some output like this, your command is working. And you can deploy it with configuring your crontab.
+If you are seeing some output like this, your command is working. And you can deploy it by configuring your crontab.
 
 ### CRONTAB
 Please do not forget to disable `testMode` before you setup crontab for real emailing.
