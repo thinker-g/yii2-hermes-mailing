@@ -2,6 +2,12 @@
 
 Highly configurable multi-process emailing solution (console command) for yii2.0.
 
+[![Latest Stable Version](https://poser.pugx.org/thinker-g/yii2-hermes-mailing/v/stable)](https://packagist.org/packages/thinker-g/yii2-hermes-mailing)
+[![Total Downloads](https://poser.pugx.org/thinker-g/yii2-hermes-mailing/downloads)](https://packagist.org/packages/thinker-g/yii2-hermes-mailing)
+[![Latest Unstable Version](https://poser.pugx.org/thinker-g/yii2-hermes-mailing/v/unstable)](https://packagist.org/packages/thinker-g/yii2-hermes-mailing)
+[![License](https://poser.pugx.org/thinker-g/yii2-hermes-mailing/license)](https://packagist.org/packages/thinker-g/yii2-hermes-mailing)
+[![Powered by Yii 2.0](https://img.shields.io/badge/Powered%20by-Yii%20Framework%202.0-yellowgreen.svg)](http://www.yiiframework.com/)
+
 ## Installation
 
 ### 1. Downloading
